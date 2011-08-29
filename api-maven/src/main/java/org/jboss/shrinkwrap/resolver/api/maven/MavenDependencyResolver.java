@@ -23,11 +23,12 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolver;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 
 /**
- * An artifact builder is object which holds and construct dependencies and it is able to resolve them into an array of
- * ShrinkWrap archives.
+ * An artifact builder is object which holds and construct dependencies and it
+ * is able to resolve them into an array of ShrinkWrap archives.
  * 
- * Artifact builder allows chaining of artifacts, that is specifying a new artifact. In this case, currently constructed
- * artifact is stored as a dependency and user is allowed to specify parameters for another artifact.
+ * Artifact builder allows chaining of artifacts, that is specifying a new
+ * artifact. In this case, currently constructed artifact is stored as a
+ * dependency and user is allowed to specify parameters for another artifact.
  * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
@@ -46,7 +47,6 @@ public interface MavenDependencyResolver
     * @return A dependency builder with a configuration from given file
     */
    MavenDependencyResolver configureFrom(String path);
-
 
    /**
     * Loads remote repositories for a POM file. If repositories are defined in
@@ -155,7 +155,6 @@ public interface MavenDependencyResolver
     * @throws ResolutionException
     */
    MavenDependencyResolver includeDependenciesFromPom(final String path) throws ResolutionException;
-
 
    /**
     * Resolves based upon dependencies declared in the POM at the specified path
