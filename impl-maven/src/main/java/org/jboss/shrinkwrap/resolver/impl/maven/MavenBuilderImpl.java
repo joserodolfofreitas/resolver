@@ -130,13 +130,13 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    @Override
    public MavenDependencyResolver configureFrom(String path)
    {
-       path = resolvePathByQualifier(path);
+      path = resolvePathByQualifier(path);
 
-       Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
-       system.loadSettings(new File(path), settings);
-       // regenerate session
-       this.session = system.getSession(settings);
-       return this;
+      Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
+      system.loadSettings(new File(path), settings);
+      // regenerate session
+      this.session = system.getSession(settings);
+      return this;
    }
 
     
@@ -202,19 +202,18 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    @Override
    public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
    {
-       path = resolvePathByQualifier(path);
+        path = resolvePathByQualifier(path);
 
-       Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
+        Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
 
-       Model model = system.loadPom(new File(path), settings, session);
+        Model model = system.loadPom(new File(path), settings, session);
 
-       ArtifactTypeRegistry stereotypes = system.getArtifactTypeRegistry(session);
+        ArtifactTypeRegistry stereotypes = system.getArtifactTypeRegistry(session);
 
-       for (org.apache.maven.model.Dependency dependency : model.getDependencies())
-       {
-           dependencies.push(MavenConverter.fromDependency(dependency, stereotypes));
-       }
-       return this;
+        for (org.apache.maven.model.Dependency dependency : model.getDependencies()) {
+            dependencies.push(MavenConverter.fromDependency(dependency, stereotypes));
+        }
+        return this;
    }
 
    /**
