@@ -130,7 +130,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    @Override
    public MavenDependencyResolver configureFrom(String path)
    {
-        path = resolvePathByQualifier(path);
+       path = resolvePathByQualifier(path);
 
        Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
        system.loadSettings(new File(path), settings);
@@ -202,7 +202,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    @Override
    public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
    {
-        path = resolvePathByQualifier(path);
+       path = resolvePathByQualifier(path);
 
        Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
 
@@ -962,68 +962,66 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
     */
    private String getLocalResourcePathFromResourceName(final String resourceName) throws IllegalArgumentException
    {
-       final URL resourceUrl = AccessController.doPrivileged(SecurityActions.GetTcclAction.INSTANCE).getResource(resourceName);
-       Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
+      final URL resourceUrl = AccessController.doPrivileged(SecurityActions.GetTcclAction.INSTANCE).getResource(resourceName);
+      Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
 
-       String resourcePath = resourceUrl.getFile();
-       resourcePath = this.decodeToUTF8(resourcePath);
+      String resourcePath = resourceUrl.getFile();
+      resourcePath = this.decodeToUTF8(resourcePath);
 
-       if (!this.isResourcePathForAReadableFile(resourcePath)) {
-           resourcePath = this.createTmpPomFile(resourceName);
-       }
-       return resourcePath;
+      if (!this.isResourcePathForAReadableFile(resourcePath)) {
+         resourcePath = this.createTmpPomFile(resourceName);
+      }
+      return resourcePath;
    }
 
    private boolean isResourcePathForAReadableFile(String resourcePath) {
-       File file = new File(resourcePath);
-       return file.exists();
+      File file = new File(resourcePath);
+      return file.exists();
    }
 
    private String createTmpPomFile(final String resourceName) {
-       File tmp = null;
-       try {
-           String tmpFileName = resourceName.replaceAll("/", ".").replaceAll(File.pathSeparator, ".");
+      File tmp = null;
+      try {
+          String tmpFileName = resourceName.replaceAll("/", ".").replaceAll(File.pathSeparator, ".");
+          System.out.println(tmpFileName);
+          tmp = File.createTempFile("sw_" + tmpFileName, null);
 
-           System.out.println(tmpFileName);
-           tmp = File.createTempFile("sw_" + tmpFileName, null);
+          InputStream inputStream = AccessController.doPrivileged(SecurityActions.GetTcclAction.INSTANCE).getResourceAsStream(resourceName);
+          OutputStream out;
+          out = new FileOutputStream(tmp);
 
-           InputStream inputStream = AccessController.doPrivileged(SecurityActions.GetTcclAction.INSTANCE).getResourceAsStream(resourceName);
-           OutputStream out;
-
-           out = new FileOutputStream(tmp);
-
-           byte buf[] = new byte[1024];
-           int len;
-           while ((len = inputStream.read(buf)) > 0) {
-               out.write(buf, 0, len);
-           }
-           out.close();
+          byte buf[] = new byte[1024];
+          int len;
+          while ((len = inputStream.read(buf)) > 0) {
+             out.write(buf, 0, len);
+          }
+          out.close();
            inputStream.close();
 
-       } catch (IOException e) {
-           throw new IllegalArgumentException("Could not create a temp pom file with the resource name " + resourceName);
-       } 
+      } catch (IOException e) {
+          throw new IllegalArgumentException("Could not create a temp pom file with the resource name " + resourceName);
+      } 
 
-       return tmp.getPath();
+      return tmp.getPath();
 
    }
 
    private String decodeToUTF8(String resourcePath) {
-       try {
-           // Have to URL decode the string as the ClassLoader.getResource(String) returns an URL encoded URL
-           resourcePath = URLDecoder.decode(resourcePath, "UTF-8");
-       } catch (UnsupportedEncodingException uee) {
-           throw new IllegalArgumentException(uee);
-       }
-       return resourcePath;
+      try {
+          // Have to URL decode the string as the ClassLoader.getResource(String) returns an URL encoded URL
+          resourcePath = URLDecoder.decode(resourcePath, "UTF-8");
+      } catch (UnsupportedEncodingException uee) {
+          throw new IllegalArgumentException(uee);
+      }
+      return resourcePath;
    }
 
-    private String resolvePathByQualifier(String path) {
-       if (path.startsWith(CLASSPATH_QUALIFIER)) {
-           path = this.getLocalResourcePathFromResourceName(path.replace(CLASSPATH_QUALIFIER, ""));
-       } else if (path.startsWith(FILE_QUALIFIER)) {
-           path = path.replace(FILE_QUALIFIER, "");
-       }
-       return path;
+   private String resolvePathByQualifier(String path) {
+      if (path.startsWith(CLASSPATH_QUALIFIER)) {
+          path = this.getLocalResourcePathFromResourceName(path.replace(CLASSPATH_QUALIFIER, ""));
+      } else if (path.startsWith(FILE_QUALIFIER)) {
+          path = path.replace(FILE_QUALIFIER, "");
+      }
+      return path;
    }
 }
