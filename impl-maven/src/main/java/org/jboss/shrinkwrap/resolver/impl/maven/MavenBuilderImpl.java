@@ -209,8 +209,9 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
 
       ArtifactTypeRegistry stereotypes = system.getArtifactTypeRegistry(session);
 
-      for (org.apache.maven.model.Dependency dependency : model.getDependencies()) {
-          dependencies.push(MavenConverter.fromDependency(dependency, stereotypes));
+      for (org.apache.maven.model.Dependency dependency : model.getDependencies())
+      {
+         dependencies.push(MavenConverter.fromDependency(dependency, stereotypes));
       }
       return this;
    }
